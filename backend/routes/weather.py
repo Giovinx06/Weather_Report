@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required
 from models import db, WeatherData
 from utils.fetch_weather import fetch_openweathermap
+from utils.process_data import calculate_daily_stats, get_trend_for_city
 
 weather_bp = Blueprint('weather', __name__)
 
@@ -30,3 +31,16 @@ def list_data():
         'humidity': d.humidity,
         'pressure': d.pressure
     } for d in data])
+
+@weather_bp.route('/stats', methods=['GET'])
+@jwt_required()
+def get_daily_stats():
+    stats = calculate_daily_stats()
+    return jsonify(stats)
+
+@weather_bp.route('/trend/<city>', methods=['GET'])
+@jwt_required()
+def get_city_trend(city):
+    days = request.args.get('days', 7, type=int)
+    trend = get_trend_for_city(city, days)
+    return jsonify(trend)

@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_swagger_ui import get_swaggerui_blueprint
+from flask_cors import CORS
 from config import Config
 from models import db
 from auth import auth_bp
@@ -9,6 +10,9 @@ from routes.users import users_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
+
+# Enable CORS
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # init
 db.init_app(app)
