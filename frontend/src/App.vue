@@ -14,8 +14,11 @@
               <li class="nav-item" v-if="isAuthenticated">
                 <router-link class="nav-link" to="/dashboard">Dashboard</router-link>
               </li>
-              <li class="nav-item" v-if="isAuthenticated">
+              <li class="nav-item" v-if="isAuthenticated && isAdmin">
                 <router-link class="nav-link" to="/users">Users</router-link>
+              </li>
+              <li class="nav-item" v-if="isAuthenticated">
+                <span class="nav-link text-primary">{{ username }}</span>
               </li>
               <li class="nav-item" v-if="isAuthenticated">
                 <a class="nav-link" href="#" @click.prevent="logout">Logout</a>
@@ -29,20 +32,16 @@
   </template>
   
   <script>
-  import { mapState, mapMutations } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   export default {
     computed: {
-      ...mapState(['token']),
+      ...mapState(['token', 'isAdmin', 'username']),
       isAuthenticated() {
         return !!this.token;
       }
     },
     methods: {
-      ...mapMutations(['setToken']),
-      logout() {
-        this.setToken('');
-        this.$router.push('/login');
-      }
+      ...mapActions(['logout']),
     }
   }
   </script>

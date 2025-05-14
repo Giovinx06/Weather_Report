@@ -21,4 +21,4 @@ def login():
     if not user or not check_password_hash(user.password_hash, data['password']):
         return jsonify(msg="Bad creds"), 401
     token = create_access_token(identity=user.id)
-    return jsonify(access_token=token)
+    return jsonify(access_token=token, is_admin=user.is_admin, username=user.username)
